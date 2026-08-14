@@ -1,13 +1,29 @@
 aid: trycardinal-ai
 name: Cardinal
-description: Cardinal (trycardinal.ai) is an AI platform for precision outbound sales,
-  built for fast-growing go-to-market teams that want outbound to function like a real
-  engine rather than a collection of disconnected tools and experiments. The company is
-  a Y Combinator-backed startup; its public presence today is a marketing site (product,
-  company, and customers pages plus archived engineering posts) with a waitlist for
-  access. No public API, developer portal, or documentation surface has been published
-  yet, so this profile captures verified company identity while the developer program
-  is still forming.
+description: 'Cardinal is an AI platform for precision outbound sales — it markets
+  itself as "revenue agents for high-growth companies" — built for go-to-market teams
+  that want outbound to run as one engine instead of a stack of disconnected tools.
+  Its agents build and refresh account lists from signals, monitor what prospects post
+  and engage with, generate personalized snippets, and orchestrate end-to-end email
+  and LinkedIn plays, while capturing inbound from website visitors, product signups
+  and ad impressions. The company is a Y Combinator Winter 2026 company founded by
+  Devishi Jha and Jianna Liu, based in San Francisco, and names Mintlify, Deepgram,
+  Greptile, Giga and Luminai among its customers. Cardinal moved its primary web
+  presence from trycardinal.ai to trycardinal.com during 2026: https://trycardinal.ai/
+  now HTTP 301s to https://www.trycardinal.com/ and the former deep pages on the .ai
+  domain (/company, /product) return 404, though the company still runs its customer
+  application, its email and its analytics identity on trycardinal.ai. The product is
+  sold as half-software and half-service ("we wire into your existing stack and build
+  agents around plays that already work for you"), delivered through a customer app at
+  app.trycardinal.ai behind a Stytch login, with a Calendly GTM chat as the only
+  publicly reachable entry point. It reads from and writes back to customer CRMs and
+  says it adds a new integration every two weeks, but names none of them publicly and
+  publishes no outbound API of its own: across four hosts on two domains this pass
+  found no OpenAPI, GraphQL SDL, AsyncAPI, MCP server, agent card, webhook catalog,
+  SDK, CLI, developer portal or documentation site. docs.trycardinal.ai does not
+  resolve in DNS, api.trycardinal.ai is a dangling custom domain whose Render origin
+  answers x-render-routing: no-server, and every /api/* path on the customer app
+  returns HTTP 401 {"error":"Unauthorized"}.'
 url: https://raw.githubusercontent.com/api-evangelist/trycardinal-ai/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -15,6 +31,16 @@ x-backed-by:
 - y-combinator
 x-tier: stub
 x-tier-reason: portfolio-lead
+x-domain-migration:
+  from: trycardinal.ai
+  to: trycardinal.com
+  observed: '2026-08-13'
+  evidence: 'https://trycardinal.ai/ HTTP 301 -> https://www.trycardinal.com/'
+  note: >-
+    The .ai domain is not abandoned — it still carries the customer application
+    (app.trycardinal.ai), the published contact address (team@trycardinal.ai), the
+    Calendly org slug and the reb2b analytics customer_id "trycardinal.ai". Only the
+    marketing site moved. The API Evangelist slug trycardinal-ai is retained.
 accessModel:
   pricing: unknown
   onboarding: approval
@@ -22,37 +48,110 @@ accessModel:
   try_now: false
   public: false
   label: Requires approval
-  confidence: medium
-  source: []
-  generated: '2026-07-22'
+  confidence: high
+  source:
+  - https://www.trycardinal.com/enterprise
+  - https://calendly.com/trycardinal/gtm-chat
+  - https://app.trycardinal.ai/login
+  generated: '2026-08-13'
   method: derived
+  note: >-
+    No pricing page, no self-serve signup and no free tier are published anywhere on
+    the site or in its sitemap. Every call to action is "Book a demo" (Calendly) or
+    mailto:team@trycardinal.ai, and the application at app.trycardinal.ai answers every
+    unauthenticated path with a redirect to a Stytch-backed login.
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-21'
-image: https://framerusercontent.com/images/Wzf0tACVAWtjIXAt0DQI1Rz8ko.jpg
+modified: '2026-08-13'
+image: https://framerusercontent.com/assets/OZUI2MB2pSTkOci3gyWuOUWDoiQ.jpg
 tags:
 - Company
 - Artificial Intelligence
 - Sales
 - Outbound Sales
 - Sales Automation
+- Sales Engagement
 - Go-To-Market
+- Revenue Operations
+- AI Agents
+- Lead Generation
 - Machine Learning
 apis: []
 common:
 - type: DomainSecurity
   url: security/trycardinal-ai-domain-security.yml
+- type: LLMsTxt
+  url: llms/trycardinal-ai-llms.txt
+- type: Lifecycle
+  url: lifecycle/trycardinal-ai-lifecycle.yml
+- type: StatusPage
+  url: https://status.trycardinal.ai/
+- type: Plans
+  url: plans/trycardinal-ai-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/trycardinal-ai-rate-limits.yml
 - type: Website
-  url: https://trycardinal.ai
-- type: SignUp
-  url: https://tally.so/r/5BzXOo
+  url: https://www.trycardinal.com/
+- type: Features
+  url: https://www.trycardinal.com/product
+- type: Blog
+  url: https://www.trycardinal.com/blog
+- type: About
+  url: https://www.trycardinal.com/team
+- type: Login
+  url: https://app.trycardinal.ai/login
+- type: Contact
+  url: https://calendly.com/trycardinal/gtm-chat
+- type: Careers
+  url: https://www.ycombinator.com/companies/trycardinal-ai/jobs
+- type: LinkedIn
+  url: https://www.linkedin.com/company/trycardinalai/
+- type: Twitter
+  url: https://x.com/trycardinalai
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 x-enrichment:
-  date: '2026-07-21'
-  status: enriched
-  artifacts_added: 1
+  date: '2026-08-13'
+  status: minimal
+  artifacts_added: 5
+  artifacts_updated: 1
   pass: local-v1
+x-coverage:
+  state: none
+  reason: no-developer-program
+  detail: >-
+    Cardinal sells a half-software, half-service outbound sales product delivered through
+    a customer application behind a Stytch login, not a developer product: contract
+    discovery across four hosts on two domains found no OpenAPI, GraphQL SDL, AsyncAPI,
+    MCP endpoint, agent card, webhook catalog, SDK, CLI or documentation site of any
+    kind, there is no docs host to find (docs.trycardinal.ai and docs.trycardinal.com
+    have no DNS record), the company's own eleven-URL sitemap contains no docs,
+    developers, pricing or legal path, and the one API hostname it still publishes
+    (api.trycardinal.ai) is a dangling CNAME to a Render service that answers
+    x-render-routing:no-server and presents no TLS certificate — the only public place
+    the word "API" appears is as the name of the single component on its status page.
+  evidence:
+  - url: https://trycardinal.ai/
+    status: 301
+  - url: https://www.trycardinal.com/openapi.json
+    status: 404
+  - url: https://www.trycardinal.com/llms.txt
+    status: 404
+  - url: https://www.trycardinal.com/sitemap.xml
+    status: 200
+  - url: https://app.trycardinal.ai/api
+    status: 401
+  - url: https://app.trycardinal.ai/openapi.json
+    status: 404
+  - url: https://app.trycardinal.ai/.well-known/agent-card.json
+    status: 404
+  - url: https://api.trycardinal.ai/
+    status: 409
+  - url: https://coordinator-api-wmxp.onrender.com/openapi.json
+    status: 404
+  - url: https://status.trycardinal.ai/api/v2/summary.json
+    status: 200
+  checked: '2026-08-13'
