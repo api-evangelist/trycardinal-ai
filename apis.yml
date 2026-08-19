@@ -60,7 +60,7 @@ accessModel:
     the site or in its sitemap. Every call to action is "Book a demo" (Calendly) or
     mailto:team@trycardinal.ai, and the application at app.trycardinal.ai answers every
     unauthenticated path with a redirect to a Stytch-backed login.
-specificationVersion: '0.20'
+specificationVersion: '0.23'
 created: '2026-07-17'
 modified: '2026-08-13'
 image: https://framerusercontent.com/assets/OZUI2MB2pSTkOci3gyWuOUWDoiQ.jpg
