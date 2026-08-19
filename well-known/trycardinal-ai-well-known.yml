@@ -1,0 +1,136 @@
+generated: '2026-08-13'
+method: probed
+source: >-
+  Live unauthenticated GET of the RFC 8615 /.well-known/ discovery surface on every
+  reachable host Cardinal operates: the current marketing site (www.trycardinal.com),
+  the legacy marketing domain (trycardinal.ai) and the customer application
+  (app.trycardinal.ai). apis.yml carries no apis[] entries and no baseURL, so the host
+  list was assembled from the website, the redirect target and the application host.
+checked: '2026-08-13'
+
+# POINTER DECISION — no WellKnown and no SecurityTxt pointer is emitted from this file.
+# Thirty probes across three hosts returned ZERO documents. Every path either 404s or
+# 307s to a login. A pointer asserts that the provider SERVES that surface; this file
+# records that it does not. Recording the absence is the point — a later pass should
+# not have to re-litigate it.
+#
+# api.trycardinal.ai is deliberately absent from the host list below: it presents no TLS
+# certificate (SSLV3_ALERT_HANDSHAKE_FAILURE) and its Render origin answers
+# x-render-routing:no-server, so there is no server there to probe. See
+# security/trycardinal-ai-domain-security.yml.
+
+hosts:
+- host: https://www.trycardinal.com
+  role: marketing website (Framer-hosted)
+  control_probe:
+    path: /.well-known/zzz-control-nonexistent-9931
+    status: 404
+    bytes: 10
+    note: host returns honest 404s ("Not found"); every status below is trustworthy
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/mcp.json
+    status: 404
+
+- host: https://trycardinal.ai
+  role: legacy marketing domain (root 301s to www.trycardinal.com)
+  control_probe:
+    path: /.well-known/zzz-control-nonexistent-9931
+    status: 404
+    bytes: 10
+    note: host returns honest 404s ("Not Found"); every status below is trustworthy
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/mcp.json
+    status: 404
+
+- host: https://app.trycardinal.ai
+  role: customer application (Next.js on Vercel, Stytch login)
+  control_probe:
+    path: /.well-known/zzz-control-nonexistent-9931
+    status: 307
+    location: /login?next=...
+    note: >-
+      NOT a soft-200 catch-all. Extensionless paths are caught by auth middleware and
+      307 to the login page; paths ending in a file extension fall through to an honest
+      Next.js 404. Either way nothing anonymous is readable, and no 200 is recorded on
+      this host — there is no false-positive risk here.
+  documents:
+  - path: /.well-known/security.txt
+    status: 307
+    document: false
+    redirects_to: /login
+  - path: /.well-known/openid-configuration
+    status: 307
+    document: false
+    redirects_to: /login
+  - path: /.well-known/oauth-authorization-server
+    status: 307
+    document: false
+    redirects_to: /login
+    note: >-
+      Auth-gated, not published. Cardinal's application authenticates against Stytch
+      (api.stytch.com appears in the app's own Content-Security-Policy connect-src), so
+      any OAuth metadata would belong to Stytch rather than to Cardinal.
+  - path: /.well-known/oauth-protected-resource
+    status: 307
+    document: false
+    redirects_to: /login
+  - path: /.well-known/api-catalog
+    status: 307
+    document: false
+    redirects_to: /login
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    document: false
+  - path: /.well-known/agent-card.json
+    status: 404
+    document: false
+  - path: /.well-known/agent.json
+    status: 404
+    document: false
+  - path: /.well-known/mcp.json
+    status: 404
+    document: false
+
+summary:
+  hosts_probed: 3
+  paths_probed: 30
+  real_documents_found: 0
+  first_party_documents_found: 0
+  soft_200_hosts: 0
+  http_200_responses: 0
+  pointers_emitted: []
+  note: >-
+    Zero /.well-known documents on any host. No WellKnown, SecurityTxt, APICatalog,
+    OpenIDConnect, AIPlugin or AgentCard pointer is warranted.

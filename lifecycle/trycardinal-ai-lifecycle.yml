@@ -1,0 +1,136 @@
+generated: '2026-08-13'
+method: searched
+source: https://status.trycardinal.ai/api/v2/summary.json
+checked: '2026-08-13'
+
+# DOMAIN NOTE (STEP 0c ownership justification):
+# The status page is on trycardinal.ai while the marketing site is now on
+# trycardinal.com. Same company: https://trycardinal.ai/ HTTP 301s to
+# https://www.trycardinal.com/, the customer application still runs at
+# app.trycardinal.ai, the published contact address is team@trycardinal.ai, and the
+# status page's own JSON names the page "Cardinal Status Page" with url
+# https://status.trycardinal.ai/. Only the marketing site moved domains.
+
+provider: Cardinal
+
+status_page:
+  present: true
+  url: https://status.trycardinal.ai/
+  platform: incident.io
+  page_id: 01K4TQZA4KC0F8PWS6X01RATDS
+  page_name: Cardinal Status Page
+  dns: status.trycardinal.ai CNAME statuspage.incident.io
+  machine_readable: true
+  api:
+    summary: https://status.trycardinal.ai/api/v2/summary.json
+    format: >-
+      Statuspage-v2-compatible JSON served by incident.io, unauthenticated, HTTP 200,
+      content-type application/json. Only the summary endpoint exists — /api/v1/summary
+      returns 404 and there is no components.json or status.json sibling.
+    rss: https://status.trycardinal.ai/feed.rss
+    rss_generator: incident.io
+  history: https://status.trycardinal.ai/history
+  http_status: 200
+  current_indicator: none
+  current_description: All Systems Operational
+  page_created_at: '2025-09-10T21:19:42Z'
+  page_updated_at: '2025-09-10T21:19:43Z'
+  components:
+  - name: API
+    id: 01K4TQZACA973ZP5QAVQH437KB
+    status: operational
+    uptime_window: May 2026 - Aug 2026
+    uptime: 100%
+  open_incidents: 0
+  scheduled_maintenances: 0
+  incident_history: >-
+    The RSS feed contains zero <item> elements and the page reports no incidents in its
+    rolling three-month window, so there is no published incident history to read.
+  note: >-
+    A REAL, first-party, machine-readable operational surface — the single strongest
+    artifact this company publishes. Worth reading precisely: the page declares exactly
+    ONE component, named "API", created the same second as the page itself and never
+    edited since (created_at and updated_at are 2025-09-10, eleven months before this
+    probe). It is a default single-component page, not a decomposed service map. It also
+    means Cardinal operates an API it monitors and reports uptime on — that API is simply
+    not public, and no contract for it is published anywhere. See x-coverage in apis.yml.
+
+# NEGATIVE FINDINGS — probed and genuinely absent. Recorded so a later pass does not
+# re-litigate them, and so the absence is legible rather than looking like an omission.
+versioning_policy:
+  present: false
+  note: >-
+    No API versioning policy published. There is no public API to version.
+
+deprecation_policy:
+  present: false
+  rfc8594_sunset_header: not-observed
+  note: >-
+    No deprecation or sunset policy on either domain, and no Deprecation/Sunset response
+    headers could be observed because no anonymously reachable API endpoint exists —
+    every /api/* path on app.trycardinal.ai returns HTTP 401 {"error":"Unauthorized"}.
+    NO Deprecation pointer is emitted.
+
+sla:
+  present: false
+  note: >-
+    No published uptime SLA, availability target, credit schedule or SLA document. The
+    status page publishes an observed uptime figure (100% for the API component over the
+    rolling three-month window) but that is a measurement, not a commitment.
+
+changelog:
+  present: false
+  note: >-
+    No dated product or API changelog. https://www.trycardinal.com/changelog returns
+    HTTP 404 and the sitemap (11 URLs) lists no changelog or release-notes path. The
+    blog at https://www.trycardinal.com/blog carries two long-form GTM essays, not a
+    release log. NO ChangeLog pointer is emitted.
+
+deprecated_operations:
+  derived_from: none
+  count: 0
+  note: No OpenAPI exists in this repo, so no deprecated operations could be derived.
+
+# INFRASTRUCTURE DECAY — a lifecycle finding in its own right.
+decommissioned_hosts:
+- host: api.trycardinal.ai
+  observed: '2026-08-13'
+  dns_cname: coordinator-api-wmxp.onrender.com
+  https_status: 'TLS handshake failure — no certificate presented for this name'
+  http_status: 409
+  origin_status: 404
+  origin_header: 'x-render-routing: no-server'
+  note: >-
+    The company still publishes a DNS record for an API hostname that no longer serves
+    anything. The Render service it points at is gone (no-server) and no certificate
+    covers the name, so the record is dangling. Recorded here rather than in apis.yml:
+    it is NOT asserted as a baseURL anywhere, because nothing answers there.
+
+evidence:
+- url: https://status.trycardinal.ai/api/v2/summary.json
+  status: 200
+  finding: 'real incident.io status page "Cardinal Status Page", 1 component (API), operational, 0 incidents'
+- url: https://status.trycardinal.ai/feed.rss
+  status: 200
+  finding: RSS feed generated by incident.io, zero items — no incident history published
+- url: https://status.trycardinal.ai/zzz-control-9931
+  status: 404
+  finding: control probe — host returns honest 404s, so the 200s above are real documents
+- url: https://trycardinal.statuspage.io/api/v2/summary.json
+  status: 200
+  finding: >-
+    FALSE POSITIVE — not Cardinal's. Returns Atlassian's Statuspage marketing site HTML
+    (id="magnolia"), and a control probe of https://zzznotarealcompany99123.statuspage.io
+    also returns 200, so any unclaimed *.statuspage.io subdomain answers 200. Rejected.
+- url: https://cardinal.statuspage.io/api/v2/summary.json
+  status: 401
+  finding: 'inactive third-party page ("Your page is inactive"), unrelated to this company. Rejected.'
+- url: https://status.trycardinal.com
+  status: 0
+  finding: DNS NXDOMAIN — the status page did not follow the marketing site to the .com domain
+- url: https://www.trycardinal.com/changelog
+  status: 404
+  finding: no changelog
+- url: https://www.trycardinal.com/sitemap.xml
+  status: 200
+  finding: 11 URLs, none of them a changelog, release-notes, status, pricing or legal page

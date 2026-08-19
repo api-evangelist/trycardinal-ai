@@ -1,0 +1,100 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  Full read of every page in https://www.trycardinal.com/sitemap.xml (11 URLs, HTTP
+  200), plus direct probes of the conventional pricing paths on both domains.
+checked: '2026-08-13'
+
+# WHAT IS BEING PRICED — nothing, publicly. This file records a deliberate absence.
+# Cardinal publishes NO pricing of any kind: no plan table, no starting price, no free
+# tier, no trial terms, no per-seat or per-agent rate, and no API metering. Every
+# commercial path on the site terminates in a demo booking or an email address.
+
+plan_count: 0
+plans: []
+
+pricing_page:
+  present: false
+  probed:
+  - url: https://www.trycardinal.com/pricing
+    status: 404
+  - url: https://trycardinal.ai/pricing
+    status: 404
+  sitemap_check:
+    url: https://www.trycardinal.com/sitemap.xml
+    status: 200
+    urls_listed: 11
+    paths:
+    - /
+    - /enterprise
+    - /customers
+    - /team
+    - /blog
+    - /product
+    - /blog/i-was-early-gtm
+    - /blog/judgement-game
+    - /blogs/i-was-early-gtm-at-two-high-growth-companies
+    - /blogs/sales-is-a-judgement-game
+    note: >-
+      The company's own sitemap contains no /pricing, /plans, /signup, /register,
+      /terms, /privacy or /legal path. There is no pricing page to miss.
+
+sales_motion: contact-sales
+sales_motion_detail: >-
+  Enterprise/contact-sales only. The published entry points are a Calendly booking at
+  https://calendly.com/trycardinal/gtm-chat ("GTM chat", HTTP 200) and the address
+  mailto:team@trycardinal.ai. Cardinal describes itself as "half-software and
+  half-service" that "wire[s] into your existing stack and build[s] agents around plays
+  that already work for you" — a delivery model that is scoped and quoted per customer,
+  which is consistent with publishing no rate card.
+
+self_serve_signup: false
+self_serve_detail: >-
+  No signup or registration surface exists. The application at
+  https://app.trycardinal.ai/login (HTTP 200) presents a login only; every other path
+  on that host 307s back to it. Access is provisioned, not purchased.
+
+free_tier:
+  present: false
+free_trial:
+  present: false
+  note: No trial terms are published anywhere on either domain.
+
+stale_signup_form:
+  url: https://tally.so/r/5BzXOo
+  status: 200
+  form_name: 'Meet with Cardinal '
+  note: >-
+    The prior enrichment pass (2026-07-21) recorded this Tally form as a SignUp pointer,
+    from the older trycardinal.ai marketing site. It is still live but it is a MEETING
+    REQUEST form, not a signup or waitlist, and it is no longer linked from any page in
+    the current sitemap — the site now routes the same intent to Calendly. The SignUp
+    pointer has been removed from apis.yml rather than left pointing at an unlinked
+    third-party form that does not do what the pointer claims.
+
+api_pricing:
+  present: false
+  note: >-
+    No API pricing of any kind — no per-request tier, no metered developer plan, no
+    rate-limit-by-plan table. Consistent with the absence of any public API: see
+    x-coverage in apis.yml.
+
+evidence:
+- url: https://www.trycardinal.com/pricing
+  status: 404
+  finding: no pricing page on the current brand domain
+- url: https://www.trycardinal.com/sitemap.xml
+  status: 200
+  finding: 11 URLs, no pricing/plans/signup/legal path among them
+- url: https://www.trycardinal.com/enterprise
+  status: 200
+  finding: enterprise page carries testimonials and a demo CTA, no commercial terms
+- url: https://calendly.com/trycardinal/gtm-chat
+  status: 200
+  finding: the actual commercial entry point — a booked call
+- url: https://app.trycardinal.ai/login
+  status: 200
+  finding: login only, no self-serve registration
+- url: https://tally.so/r/5BzXOo
+  status: 200
+  finding: '"Meet with Cardinal" meeting form, still live but unlinked from the current site'

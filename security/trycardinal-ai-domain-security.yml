@@ -1,19 +1,120 @@
-generated: '2026-07-21'
+generated: '2026-08-13'
 method: probed
-source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+source: >-
+  Live DNS/TLS/HTTP probes of every host associated with Cardinal. The marketing host
+  came from probe-domain-security.py (which reads the apis.yml Website pointer); the
+  three trycardinal.ai hosts were probed by hand in the same pass and merged in,
+  because apis.yml carries no apis[] entries and no baseURL, so the script's host
+  discovery only reaches the website domain. Both registrable domains are covered.
+checked: '2026-08-13'
+
 hosts:
-- host: trycardinal.ai
+- host: www.trycardinal.com
+  role: marketing website (Framer-hosted)
   https: true
   tls_version: TLSv1.3
-  cert_expires: Sep 30 16:27:57 2026 GMT
+  cert_expires: Oct 27 23:25:25 2026 GMT
   hsts: true
   hsts_max_age: 31536000
+
+- host: trycardinal.ai
+  role: legacy marketing domain — 301 redirect
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Feb 14 16:12:24 2027 GMT
+  hsts: true
+  hsts_max_age: 31536000
+  http_status: 301
+  redirects_to: https://www.trycardinal.com/
+  note: >-
+    Root 301s to the .com marketing site. Deep paths that existed on the old site
+    (/company, /product) now return HTTP 404, so this is a root-only redirect rather
+    than a path-preserving domain migration.
+
+- host: app.trycardinal.ai
+  role: customer application (Next.js on Vercel)
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Sep 18 03:49:59 2026 GMT
+  hsts: true
+  hsts_max_age: 63072000
+  hsts_include_subdomains: true
+  http_status: 200
+  final_url: https://app.trycardinal.ai/login?next=%2F
+  security_headers:
+    content_security_policy: true
+    x_frame_options: DENY
+    x_content_type_options: nosniff
+    referrer_policy: strict-origin-when-cross-origin
+    permissions_policy: camera=(), microphone=(), geolocation=()
+    frame_ancestors: none
+  note: >-
+    The strongest security posture of the three hosts: a full CSP with an explicit
+    allow-list, frame-ancestors 'none', two-year HSTS with includeSubDomains, and
+    nosniff. Every unauthenticated path redirects to a Stytch-backed login.
+
+- host: api.trycardinal.ai
+  role: custom API hostname — NOT SERVING
+  https: false
+  tls_error: 'SSLV3_ALERT_HANDSHAKE_FAILURE — no certificate is presented for this name'
+  http_status: 409
+  http_body: 'error code: 1001'
+  dns_cname: coordinator-api-wmxp.onrender.com
+  origin_probe:
+    url: https://coordinator-api-wmxp.onrender.com/
+    status: 404
+    header: 'x-render-routing: no-server'
+  note: >-
+    A DEAD CUSTOM DOMAIN, recorded because its absence is the finding. DNS resolves
+    api.trycardinal.ai to a Render service (coordinator-api-wmxp.onrender.com), but no
+    TLS certificate covers the custom hostname, so every HTTPS request fails at the
+    handshake; plain HTTP returns Cloudflare error 1001 (HTTP 409). Probing the Render
+    origin directly returns HTTP 404 with x-render-routing:no-server on every path,
+    which is Render's response when no service is attached. Nothing is served here, and
+    no API host is asserted anywhere in this repo on the strength of this record.
+
 domains:
+- domain: trycardinal.com
+  registrar_dns: framer / sites.framer.app
+  dnssec: false
+  caa: []
+  spf: true
+  spf_record: v=spf1 include:_spf.google.com ~all
+  dmarc: true
+  dmarc_policy: quarantine
+  dmarc_raw: 'v=DMARC1; p=quarantine; adkim=r; aspf=r; rua=mailto:dmarc_rua@onsecureserver.net;'
+  note: >-
+    Weaker than the .ai domain on two counts: no CAA records at all, and a DMARC policy
+    of quarantine rather than reject. This is now the primary brand domain, so the
+    weaker posture applies to the name customers see.
+
 - domain: trycardinal.ai
   dnssec: false
   caa:
   - 0 iodef "mailto:jianna@trycardinal.ai"
+  - 0 issue "starfieldtech.com"
   - 0 issue "letsencrypt.org"
+  - 0 issue "godaddy.com"
   spf: true
+  spf_record: v=spf1 include:_spf.google.com ~all
   dmarc: true
   dmarc_policy: reject
+  dmarc_raw: 'v=DMARC1; p=reject; adkim=r; aspf=r; rua=mailto:dmarc_rua@onsecureserver.net;'
+  note: >-
+    CAA is present and names a founder's address as the incident contact
+    (mailto:jianna@trycardinal.ai) — a real, human-owned iodef target. Since the prior
+    pass (2026-07-21) two issuers were added alongside Let's Encrypt (starfieldtech.com
+    and godaddy.com), widening the set of CAs permitted to issue for this domain.
+    DMARC is at p=reject, the strongest published policy across either domain.
+
+summary:
+  hosts_probed: 4
+  hosts_serving_https: 3
+  domains_probed: 2
+  dnssec_enabled: 0
+  dmarc_enforced: 2
+  caa_present: 1
+  weakest_link: >-
+    trycardinal.com — the primary brand domain — has no CAA records and only
+    p=quarantine DMARC, while the legacy trycardinal.ai domain has both. Neither domain
+    signs DNSSEC.

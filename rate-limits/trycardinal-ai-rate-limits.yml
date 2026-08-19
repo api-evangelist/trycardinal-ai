@@ -1,0 +1,53 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  Documentation search across https://www.trycardinal.com (all 11 sitemap URLs) and
+  https://trycardinal.ai, plus live unauthenticated probes of
+  https://app.trycardinal.ai/api/* and https://api.trycardinal.ai.
+checked: '2026-08-13'
+
+limit_count: 0
+
+published_limits: []
+
+response_headers:
+  observed: []
+  note: >-
+    No rate-limit response headers could be observed, and no X-RateLimit-*, RateLimit-*
+    or Retry-After header appeared on any response collected in this pass. There is no
+    anonymously reachable API endpoint on which to see them: every /api/* path on
+    https://app.trycardinal.ai returns HTTP 401 with the body {"error":"Unauthorized"}
+    and no rate-limit headers, and https://api.trycardinal.ai fails at the TLS handshake
+    because no certificate covers the name. Absence of an observation is NOT evidence
+    that the backend omits the headers — it is evidence that nothing is readable without
+    credentials.
+
+exhaustion_status_code: not-observed
+retry_after: not-observed
+
+quota_model:
+  published: false
+  note: >-
+    No commercial quotas either. Cardinal publishes no pricing page, so there is not
+    even a plan-level allowance (seats, agents, contacts, sends, enrichments) that could
+    be mistaken for a technical ceiling. See plans/trycardinal-ai-plans-pricing.yml.
+
+reason_undocumented: >-
+  Cardinal publishes no public API, no developer portal and no documentation site, so
+  there is no rate-limit surface to document. The word "API" appears on exactly one
+  public Cardinal surface: as the name of the single component on its status page. See
+  x-coverage in apis.yml.
+
+evidence:
+- url: https://app.trycardinal.ai/api
+  status: 401
+  finding: '{"error":"Unauthorized"} — identical on /api/v1, /api/docs, /api/schema, /api/openapi, /api/health, /api/swagger; no rate-limit headers on the response'
+- url: https://api.trycardinal.ai/
+  status: 0
+  finding: TLS handshake failure; plain HTTP returns 409 (Cloudflare error 1001). Nothing to observe.
+- url: https://www.trycardinal.com/sitemap.xml
+  status: 200
+  finding: 11 URLs, no docs, developers, api or reference path
+- url: https://www.trycardinal.com/product
+  status: 200
+  finding: 'product page describes CRM read/write and "a new integration every two weeks" but names no API, webhook, key or limit'
